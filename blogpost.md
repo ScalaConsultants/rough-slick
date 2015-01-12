@@ -105,7 +105,7 @@ Pure evil. Counting the selects and figuring out the nesting is left as an exerc
 
 
 ## How fast can this thing go?
-Given that the generated code looks like some kind of SQL assembly, maybe it's faster than we think? To verify, I wrote a very simple performance test, you can find it (and all the accompanying code, btw.) here *[link to github]*. Have a look if you're interested in the details of the test data or its volume. All that really matters is that test runs the query defined above and its Plain SQL equivalent 100 times on exactly the same data and it prints the respective times taken:
+Given that the generated code looks like some kind of SQL assembly, maybe it's faster than we think? To verify, I wrote a very simple performance test, you can find it (and all the accompanying code, btw.) here: https://github.com/ScalaConsultants/rough-slick. Have a look if you're interested in the details of the test data or its volume. All that really matters is that test runs the query defined above and its Plain SQL equivalent 100 times on exactly the same data and it prints the respective times taken:
 
 ```
 > runMain io.scalac.slick.JoinPerfTest
@@ -189,7 +189,7 @@ Another thing to look out for is the upcoming release of Slick 3.0 (http://slick
 
 So if I haven't scared you enough with the issues presented here, at the very least you might consider Slick's DSL as a fast and convenient prototyping tool, gradually falling back to Plain SQL mode once the bottlenecks in your application are recognized. If however, you know beforehand that you will need to squeeze the best out of a RDBMS you might be better of with frameworks like Anorm (https://www.playframework.com/documentation/2.3.x/ScalaAnorm) or ScalikeJDBC (http://scalikejdbc.org/) which aim to operate on databases in the fashion they were designed to (doesn't that sound like a good idea?)
 
-Again, the code accompanying this blog post can be found here: *link*
+Again, the code accompanying this blog post can be found here: https://github.com/ScalaConsultants/rough-slick
 
 Happy querying!
 
