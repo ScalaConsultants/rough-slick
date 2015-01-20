@@ -1,7 +1,7 @@
-DROP DATABASE IF EXISTS slick_tryouts;
-CREATE DATABASE slick_tryouts;
+-- DROP DATABASE IF EXISTS slick_tryouts;
+-- CREATE DATABASE slick_tryouts;
 
-use slick_tryouts;
+-- use slick_tryouts;
 
 CREATE TABLE supplier (
   id INT,

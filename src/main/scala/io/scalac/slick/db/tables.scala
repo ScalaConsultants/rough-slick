@@ -1,6 +1,6 @@
 package io.scalac.slick.db
 
-import scala.slick.driver.MySQLDriver.simple._
+import scala.slick.driver.PostgresDriver.simple._
 
 class Supplier(tag: Tag) extends Table[(Int, String, String)](tag, "supplier") {
   def id = column[Int]("id", O.PrimaryKey)

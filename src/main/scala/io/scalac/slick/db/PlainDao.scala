@@ -10,10 +10,9 @@ object PlainDao extends Dao with DbProvider {
 
   def fetchSales(minTotal: BigDecimal): Seq[SaleRecord] = db.withDynSession {
     sql"""SELECT purchaser.name, supplier.name, product.name, sale.total
-          FROM sale join purchaser join product join supplier
-          ON (sale.purchaser_id = purchaser.id AND
-              sale.product_id = product.id AND
-              product.supplier_id = supplier.id)
+          FROM sale JOIN purchaser ON sale.purchaser_id = purchaser.id
+                    JOIN product ON sale.product_id = product.id
+                    JOIN supplier ON product.supplier_id = supplier.id
           WHERE sale.total >= $minTotal"""
     .as[(String, String, String, BigDecimal)].list.map(SaleRecord.tupled)
   }

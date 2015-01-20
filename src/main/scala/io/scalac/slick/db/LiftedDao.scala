@@ -2,7 +2,7 @@ package io.scalac.slick.db
 
 import io.scalac.slick.db.Dao.SaleRecord
 
-import scala.slick.driver.MySQLDriver.simple._
+import scala.slick.driver.PostgresDriver.simple._
 
 object LiftedDao extends Dao with DbProvider {
 
