@@ -10,6 +10,10 @@ Having had a lot of positive experience with Typesafe's technologies we immediat
 also worth mentioning that one of the expectations was to achieve a reasonable request rate with
 minimal scaling as our client was a startup with limited funds.
 
+## Spoiler alert
+I'm about to present a couple of issues we ran into. Although they look bad, they are not meant to put you off altogether, rather they are caveats that should be considered before fully comitting to Slick. Your interactions with database (or performance expectations) may be different and you may never run into these kinds of problems. Also these issues relate mostly to MySQL, see the note about PostgreSQL close to the end.
+
+
 ## Use case
 As a running example let's consider 4 tables which have similar relations as the ones we dealt with in the project:
 
@@ -178,6 +182,28 @@ There are multiple reasons to prefer the good old SQL:
 * The best choice for performance, free from limitations imposed by abstractions.
 
 Fortunately Slick provides convenient methods of writing SQL queries. Parameteres to queries can be provided in 3 different ways including string interpolation and it's straight-forward to convert the results to tuples or case classes. Details here: http://slick.typesafe.com/doc/2.1.0/sql.html
+
+
+## PostgreSQL case
+If you investigate the issues on github you can see that people report them mostly against MySQL, so perhaps switching to another RDBMS would solve our problems. To verify, I modified the code a bit to run with PostgreSQL (to be found in branch `postgres`). The first look at the results is not promising: 
+
+```
+scala> println(salesQuery(BigDecimal(500)).selectStatement)
+select s4.s56, s5.s62, s4.s60, s4.s54 from (select s6.s41 as s51, s6.s42 as s52, s6.s43 as s53, s6.s44 as s54, s6.s45 as s55, s6.s46 as s56, s6.s47 as s57, s7.s48 as s58, s7.s49 as s59, s7.s50 as s60 from (select s8.s34 as s41, s8.s35 as s42, s8.s36 as s43, s8.s37 as s44, s9.s38 as s45, s9.s39 as s46, s9.s40 as s47 from (select s81."id" as s34, s81."purchaser_id" as s35, s81."product_id" as s36, s81."total" as s37 from "sale" s81) s8 inner join (select s83."id" as s38, s83."name" as s39, s83."address" as s40 from "purchaser" s83) s9 on 1=1) s6 inner join (select s85."id" as s48, s85."supplier_id" as s49, s85."name" as s50 from "product" s85) s7 on 1=1) s4 inner join (select s87."id" as s61, s87."name" as s62, s87."address" as s63 from "supplier" s87) s5 on ((s4.s53 = s4.s58) and (s4.s52 = s4.s55)) and (s4.s59 = s5.s61) where s4.s54 >= 500
+```
+
+With minor exceptions this is practically the same query as for MySQL. How can it perform?
+
+```
+> runMain io.scalac.slick.JoinPerfTest
+[info] Running io.scalac.slick.JoinPerfTest
+Lifted Embedding: 0.85 s
+Plain SQL:        0.13 s
+[success] Total time: 2 s, completed Jan 23, 2015 8:07:50 PM
+```
+Wow! The difference is staggering. The most reasonable explanation lies in Postgres's advanced query optimizer. You can read about the details here: http://www.postgresql.org/docs/9.4/static/geqo.html
+
+Still, there seems to be no way to circumvent the `IN` clause compilation problem.
 
 
 
