@@ -48,7 +48,7 @@ class Sale(tag: Tag) extends Table[(Int, Int, Int, BigDecimal)](tag, "sale") {
 }
 ```
 
-What you see above is an example of Slick's Lifted Embedding which is a DSL for producing queries in a type safe manner. The classes defined here represent the database tables and their columns and they enable constructing queries using for comprehensions and other methods familiar from working with Scala collections. More on that here: http://slick.typesafe.com/doc/2.1.0/schemas.html. Slick also provides a way of writing queries in a Plain SQL mode which will turn out very useful as we'll see later.
+What you see above is an example of Slick's Lifted Embedding which is a DSL for producing queries in a type safe manner. The classes defined here represent the database tables and their columns and they enable constructing queries using for comprehensions and other methods familiar from working with Scala collections. More on that here [http://slick.typesafe.com/doc/2.1.0/schemas.html](http://slick.typesafe.com/doc/2.1.0/schemas.html). Slick also provides a way of writing queries in a Plain SQL mode which will turn out very useful as we'll see later.
 
 As you can see all those tables are related and in fact all our queries required joining 2 or more tables.
 
@@ -109,7 +109,7 @@ Pure evil. Counting the selects and figuring out the nesting is left as an exerc
 
 
 ## How fast can this thing go?
-Given that the generated code looks like some kind of SQL assembly, maybe it's faster than we think? To verify, I wrote a very simple performance test, you can find it (and all the accompanying code, btw.) here: https://github.com/ScalaConsultants/rough-slick. Have a look if you're interested in the details of the test data or its volume. All that really matters is that test runs the query defined above and its Plain SQL equivalent 100 times on exactly the same data and it prints the respective times taken:
+Given that the generated code looks like some kind of SQL assembly, maybe it's faster than we think? To verify, I wrote a very simple performance test, you can find it (and all the accompanying code, btw.) in our [github repo](https://github.com/ScalaConsultants/rough-slick). Have a look if you're interested in the details of the test data or its volume. All that really matters is that test runs the query defined above and its Plain SQL equivalent 100 times on exactly the same data and it prints the respective times taken:
 
 ```
 > runMain io.scalac.slick.JoinPerfTest
@@ -119,7 +119,7 @@ Plain SQL:        0.10 s
 [success] Total time: 89 s, completed Dec 21, 2014 10:06:29 AM
 ```
 
-This issue is well known to Slick developers, you can find more info about it here: https://github.com/slick/slick/issues/623
+This issue is well known to Slick developers, you can find more info about it [here](https://github.com/slick/slick/issues/623).
 
 ## Who's in?
 
@@ -146,7 +146,7 @@ def fetchProductNamesByIds(ids: List[Int]): List[String] = db.withSession { impl
 }
 ```
 
-A query to be compiled has to be a function of arguments of type `Column`, but unlike for scalar types, there is no conversion from a collection type to a `Column`. This issue is described in more detail here: https://github.com/slick/slick/issues/718
+A query to be compiled has to be a function of arguments of type `Column`, but unlike for scalar types, there is no conversion from a collection type to a `Column`. This issue is described in more detail [here](https://github.com/slick/slick/issues/718)
 
 This simple query took about 20 ms on average to compile, but that can still be a lot for a high troughput application, and the `IN` operator can be a part of a more elaborate query like the one with the joins (as was the case in our project). The only solution then is to go with Plain SQL.
 
@@ -167,7 +167,7 @@ This innocent looking query surprisingly performs a full table scan and might hi
 select s18.s17 from (select count(1) as s17 from (select s15.`id` as s19, s15.`purchaser_id` as s20, s15.`product_id` as s21, s15.`total` as s22 from `sale` s15) s24) s18
 ```
 
-This issue is raised here: https://github.com/slick/slick/issues/489
+This issue is raised [here](https://github.com/slick/slick/issues/489).
 
 
 
@@ -181,7 +181,7 @@ There are multiple reasons to prefer the good old SQL:
 * Practically everyone knows it to some extent, plenty of resources on the Internet - quite the opposite of Slick or any other new library
 * The best choice for performance, free from limitations imposed by abstractions.
 
-Fortunately Slick provides convenient methods of writing SQL queries. Parameteres to queries can be provided in 3 different ways including string interpolation and it's straight-forward to convert the results to tuples or case classes. Details here: http://slick.typesafe.com/doc/2.1.0/sql.html
+Fortunately Slick provides convenient methods of writing SQL queries. Parameteres to queries can be provided in 3 different ways including string interpolation and it's straight-forward to convert the results to tuples or case classes. Details here: [http://slick.typesafe.com/doc/2.1.0/sql.html](http://slick.typesafe.com/doc/2.1.0/sql.html).
 
 
 ## PostgreSQL case
@@ -201,7 +201,7 @@ Lifted Embedding: 0.85 s
 Plain SQL:        0.13 s
 [success] Total time: 2 s, completed Jan 23, 2015 8:07:50 PM
 ```
-Wow! The difference is staggering. The most reasonable explanation lies in Postgres's advanced query optimizer. You can read about the details here: http://www.postgresql.org/docs/9.4/static/geqo.html
+Wow! The difference is staggering. The most reasonable explanation lies in Postgres's advanced query optimizer. You can read about the details [http://www.postgresql.org/docs/9.4/static/geqo.html](http://www.postgresql.org/docs/9.4/static/geqo.html).
 
 Still, there seems to be no way to circumvent the `IN` clause compilation problem.
 
@@ -211,11 +211,11 @@ Still, there seems to be no way to circumvent the `IN` clause compilation proble
 
 It certainly wouldn't be fair only to focus on the drawbacks of Slick as the DSL it introduces (which is a rather new concept often refferred to as Functional Relation Mapping) is certainly appealing to the fans of functional and statically typed programming. But tastes aside, probably the most important consequence is the short learning curve, and thus easy adoption into your software project as the methods of operating on tables look familiar even to beginners in Scala. 
 
-Another thing to look out for is the upcoming release of Slick 3.0 (http://slick.typesafe.com/news/2014/12/19/slick-3.0.0-M1-released.html) which promises to take relational databases into the reactive world, which is another novelty amongst competing frameworks. Surely Slick developers know how to keep with the current trends.
+Another thing to look out for is the upcoming release of [Slick 3.0](http://slick.typesafe.com/news/2014/12/19/slick-3.0.0-M1-released.html) which promises to take relational databases into the reactive world, which is another novelty amongst competing frameworks. Surely Slick developers know how to keep with the current trends.
 
-So if I haven't scared you enough with the issues presented here, at the very least you might consider Slick's DSL as a fast and convenient prototyping tool, gradually falling back to Plain SQL mode once the bottlenecks in your application are recognized. If however, you know beforehand that you will need to squeeze the best out of a RDBMS you might be better of with frameworks like Anorm (https://www.playframework.com/documentation/2.3.x/ScalaAnorm) or ScalikeJDBC (http://scalikejdbc.org/) which aim to operate on databases in the fashion they were designed to (doesn't that sound like a good idea?)
+So if I haven't scared you enough with the issues presented here, at the very least you might consider Slick's DSL as a fast and convenient prototyping tool, gradually falling back to Plain SQL mode once the bottlenecks in your application are recognized. If however, you know beforehand that you will need to squeeze the best out of a RDBMS you might be better of with frameworks like [Anorm](https://www.playframework.com/documentation/2.3.x/ScalaAnorm) or [ScalikeJDBC](http://scalikejdbc.org/) which aim to operate on databases in the fashion they were designed to (doesn't that sound like a good idea?)
 
-Again, the code accompanying this blog post can be found here: https://github.com/ScalaConsultants/rough-slick
+Again, the code accompanying this blog post can be found in our [github repo](https://github.com/ScalaConsultants/rough-slick).
 
 Happy querying!
 
