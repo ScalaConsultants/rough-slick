@@ -1,4 +1,18 @@
-# The rough experience with Slick
+---
+comments: true
+date: 2015-01-27 17:00:00
+layout: post
+slug: rough-experience-with-slick
+title: The Rough Experience with Slick
+summary: Based on a real project experience I present an opinionated warning about some of the shortcomings of the nonetheless exciting framework which Slick is.
+author: Radek Tkaczyk
+tags:
+- Scala
+- Slick
+- MySQL
+- PostgreSQL
+- SQL
+---
 
 ## Adventure begins
 
